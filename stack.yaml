@@ -1,0 +1,9 @@
+flags: {}
+extra-package-dbs: []
+packages:
+- '.'
+extra-deps:
+- accelerate-cuda-0.15.1.1
+- binary-strict-0.4.8.3
+- cuda-0.7.0.0
+resolver: lts-6.10
