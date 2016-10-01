@@ -1,8 +1,7 @@
 module Main where
 
-import Utils
-import Cli
 import Lib
+import Utils
 
 main :: IO ()
 main = hello

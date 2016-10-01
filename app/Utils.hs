@@ -1,29 +1,32 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Utils where
 
-import           System.IO
-import           Control.Monad
-import           Control.Monad.IO.Class
-import           Control.Monad.Trans.Except
-import qualified Data.ByteString            as B
-import qualified Data.ByteString.Lazy       as BL
-import           Data.Binary.Strict.Get
-import qualified Data.Binary.Strict.BitGet  as BG
-import           Data.Binary.Put
-import           Data.Word
-import           Path
-import qualified Data.Array.Repa            as R
-import           Data.Array.Repa
-                 ( Array
-                 , DIM2
-                 , Z(Z)
-                 , (:.)((:.))
-                 , (!)
-                 )
-import           Formatting
-import           Numeric
+import Control.Monad
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Except
 
-type Image = Array R.U DIM2 Word8
+-- import qualified Data.Array.Accelerate    as A
+-- import           Data.Array.Accelerate.IO
+import           Data.Array.Repa
+    ((:.) ((:.)), Array, DIM2, Z (Z), (!))
+import qualified Data.Array.Repa                 as R
+import           Data.Array.Repa.Repr.ByteString as RB
+
+import           Data.Binary.Put
+import qualified Data.Binary.Strict.BitGet as BG
+import           Data.Binary.Strict.Get
+
+import qualified Data.ByteString      as B
+import qualified Data.ByteString.Lazy as BL
+import           Data.Word
+
+import Formatting
+import Numeric
+import Path
+import System.IO
+
+type Image = Array RB.B DIM2 Word8
+-- type Image = A.Array A.DIM2 Word8
 
 data BitmapHeader = BitmapHeader
   { bmpLength   :: Int
@@ -72,12 +75,15 @@ loadImage fileHandle = do
   colorTableSize /= (B.length colorTable) ?>>!
     "Error reading image file"
 
-  return $ R.fromListUnboxed (Z:.height:.width) (B.unpack colorTable)
-  
+  -- return $ R.fromListUnboxed (Z:.height:.width) (B.unpack colorTable)
+  return $ RB.fromByteString (Z:.height:.width) colorTable
+
 getWidth :: Image -> Int
+-- getWidth image = listOfShape (extent image) !! 0
 getWidth image = R.listOfShape (R.extent image) !! 0
 
 getHeight :: Image -> Int
+-- getHeight image = listOfShape (extent image) !! 1
 getHeight image = R.listOfShape (R.extent image) !! 1
 
 printImage :: Image -> IO ()

@@ -3,7 +3,9 @@ extra-package-dbs: []
 packages:
 - '.'
 extra-deps:
-- accelerate-cuda-0.15.1.1
 - binary-strict-0.4.8.3
-- cuda-0.7.0.0
+- repa-3.4.1.1
+# - accelerate-io-0.15.1.0
+# - cuda-0.7.0.0
+# - accelerate-cuda-0.15.1.1
 resolver: lts-6.10
